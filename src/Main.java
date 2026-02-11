@@ -1,7 +1,9 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
+
         try (Scanner sc = new Scanner(System.in)) {
             int count = 1;
             System.out.println("Enter age for persons!");
@@ -15,37 +17,37 @@ public class Main {
 
             System.out.println("Enter age for " + count++ + " person: ");
             User mia2 = new User("Mia", sc.nextInt());
+
+            User guest = new User("Guest", 0);
             users.add(vadim);
             users.add(mia);
             users.add(mia2);
             users.add(vadim);
+            users.add(guest);
             System.out.println("Users : " + users);
 
-            Set<User> uniqueUsers = new HashSet<>(users);
-            System.out.println("Unique users : " + uniqueUsers);
-
-            Map<String,User> userMap = new HashMap<>();
-            userMap.put("Vadim",vadim);
-            userMap.put("Mia",mia);
-            userMap.put("Mia2",mia2);
-            userMap.put("Vadim2",vadim);
-
-            System.out.println("Users : " + userMap);
 
 
+            List<User> sorted =
+                    users.stream()
+                            .sorted(
+                                    Comparator.comparing(User::getName)
+                                            .thenComparing(Comparator.comparingInt(User::getAge).reversed())
+                            )
+                            .toList();
 
-            System.out.println(vadim + "\n" + mia + "\n" + mia2);
-            System.out.println("Users create : " + User.getUserCounter());
-            System.out.println("Set size: " + users.size());
-            System.out.println(users);
+            Optional<User> min =
+                    users.stream().min(Comparator.comparingInt(User::getAge));
 
+            TreeSet<User> set =
+                    new TreeSet<>(Comparator.comparingInt(User::getAge)
+                            .thenComparing(User::getName));
 
 
 
-        } catch (InputMismatchException e) {
-            System.out.println("Age must be a number.");
         } catch (IllegalArgumentException e) {
             System.out.println("Can not create user: " + e.getMessage());
         }
+
     }
 }
