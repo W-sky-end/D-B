@@ -26,28 +26,25 @@ public class Main {
             users.add(guest);
             System.out.println("Users : " + users);
 
+            Optional<User> maxAge ;
+            maxAge = Optional.of(users.stream().max(Comparator.comparing(User::getAge)).orElseGet(()-> new User("No adult",0)));//вышло с костылем
 
+            double average = users.stream().mapToInt(User::getAge).average().orElse(0);
 
-            List<User> sorted =
-                    users.stream()
-                            .sorted(
-                                    Comparator.comparing(User::getName)
-                                            .thenComparing(Comparator.comparingInt(User::getAge).reversed())
-                            )
-                            .toList();
+            String minAge = users.stream().min(Comparator.comparing(User::getAge)).map(User::getName).orElse("Unknown");
 
-            Optional<User> min =
-                    users.stream().min(Comparator.comparingInt(User::getAge));
-
-            TreeSet<User> set =
-                    new TreeSet<>(Comparator.comparingInt(User::getAge)
-                            .thenComparing(User::getName));
+            int maxAge2 = users.stream()
+                    .sorted(Comparator.comparingInt(User::getAge).reversed())
+                    .findFirst()
+                    .map(User::getAge)
+                    .orElse(0);
 
 
 
         } catch (IllegalArgumentException e) {
             System.out.println("Can not create user: " + e.getMessage());
         }
+
 
     }
 }
