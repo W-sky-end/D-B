@@ -26,18 +26,34 @@ public class Main {
             users.add(guest);
             System.out.println("Users : " + users);
 
-            Optional<User> maxAge ;
-            maxAge = Optional.of(users.stream().max(Comparator.comparing(User::getAge)).orElseGet(()-> new User("No adult",0)));//вышло с костылем
+            List<User> young = users.stream().filter(u -> u.getAge() < 20).toList();
+            boolean olderThanFifty = users.stream().anyMatch(u -> u.getAge() > 50);
+            boolean youngerThatTen = users.stream().anyMatch(u -> u.getAge() > 10);
 
-            double average = users.stream().mapToInt(User::getAge).average().orElse(0);
+            List<String> names = users.stream().map(User::getName).toList();
+            List<Integer> ages = users.stream().map(User::getAge).toList();
+            List<String> info = users.stream().map(u -> "Имя: " + u.getName() + "Возраст: " + u.getAge()).toList();
 
-            String minAge = users.stream().min(Comparator.comparing(User::getAge)).map(User::getName).orElse("Unknown");
+            List<String> namesSecond = users.stream().filter(u -> u.getAge() > 25).map(User::getName).toList();
+            List<String> uniqueNames = users.stream().map(User::getName).distinct().toList();
+            Optional<User> first = users.stream().filter(u -> u.getAge() > 30).findFirst();
+            double ave = users.stream().mapToInt(User::getAge).average().orElse(0);
 
-            int maxAge2 = users.stream()
-                    .sorted(Comparator.comparingInt(User::getAge).reversed())
-                    .findFirst()
-                    .map(User::getAge)
-                    .orElse(0);
+            List<User> age = users.stream().sorted(Comparator.comparing(User::getAge).
+                    reversed()).limit(3).toList();
+            List<User> name = users.stream().sorted(Comparator.comparing(User::getName)
+                    .reversed()).distinct().limit(3).toList();
+
+            Optional<User> opt = Optional.of(users.stream()
+                    .filter(u -> u.getName().equals("Alex")).findFirst().orElse(new User("Guest", 0)));
+            Optional<User> opt2 = users.stream()
+                    .filter(u -> u.getName().equals("Mia")).findFirst();
+            opt2.ifPresent(System.out::println);
+            String minAge = users.stream()
+                    .min(Comparator.comparingInt(User::getAge))
+                    .map(u -> u.getName() + ": " + u.getAge())
+                    .orElse("Unknown");
+
 
 
 
